@@ -75,3 +75,18 @@ p a:hover {
   text-decoration: underline ;
   
 }
+
+.container .name {
+    text-align: center;
+    font-size: x-large;
+    text-shadow: #6884d3;
+    
+}
+.container .image-logo {
+        height: 150px;
+        width: 150px;
+        justify-self: center;
+        border-radius: 50%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+}
