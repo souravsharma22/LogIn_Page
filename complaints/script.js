@@ -1,77 +1,51 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("complaintForm");
-  const complaintContainer = document.getElementById("complaintsContainer");
+document.getElementById("comp-btn").addEventListener('click', function () {
+  document.getElementById("raisecomplaint").style.display = 'block'; ''
+})
 
-  // 🟩 RENDER COMPLAINT (on index.html)
-  if (complaintContainer) {
-    const stored = localStorage.getItem("newComplaint");
-    if (stored) {
-      try {
-        const data = JSON.parse(stored);
-        renderComplaint(data);
-        localStorage.removeItem("newComplaint");
-      } catch (err) {
-        console.error("Invalid complaint data", err);
-      }
-    }
+
+function arrayBufferToBase64(buffer) {
+  let binary = '';
+  let bytes = new Uint8Array(buffer);
+  let len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
   }
-
-  // 🟥 SUBMIT FORM (on raise.html)
-  if (form) {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const complaint = {
-        title: document.getElementById("title").value,
-        description: document.getElementById("desc").value,
-        name: document.getElementById("name").value,
-        roll: document.getElementById("roll").value,
-        hostel: document.getElementById("hostel").value,
-        type: document.getElementById("type").value,
-      };
-
-      const imageInput = document.getElementById("image");
-
-      if (imageInput.files.length > 0) {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          complaint.image = event.target.result;
-          localStorage.setItem("newComplaint", JSON.stringify(complaint));
-          window.location.href = "index.html";
-        };
-        reader.readAsDataURL(imageInput.files[0]);
-      } else {
-        complaint.image = null;
-        localStorage.setItem("newComplaint", JSON.stringify(complaint));
-        window.location.href = "index.html";
-      }
-    });
-  }
-});
-
-// ✅ Helper to render a complaint card
-function renderComplaint({ title, description, name, roll, hostel,type, image }) {
-  const container = document.getElementById("complaintsContainer");
-  const card = document.createElement("div");
-  card.className = "col-md-4 mb-4";
-  card.innerHTML = `
-    <div class="card" style="width: 100%;">
-      ${
-        image
-          ? `<img src="${image}" class="card-img-top" alt="Uploaded image">`
-          : `<div class="card-img-top text-center py-5 bg-light">No Image Provided</div>`
-      }
-      <div class="card-body">
-        <h5 class="card-title">${title}</h5>
-        <p class="card-text">${description}</p>
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">${name}</li>
-        <li class="list-group-item">${roll}</li>
-        <li class="list-group-item">${hostel}</li>
-        <li class="list-group-item">${type}</li>
-      </ul>
-    </div>
-  `;
-  container.appendChild(card);
+  return window.btoa(binary);
 }
+
+
+async function loadComplaints() {
+  const res = await fetch('/complaints');
+  const complaints = await res.json();
+  console.log(complaints);
+  const container = document.getElementById('complaintsContainer');
+
+  complaints.forEach(c => {
+    const image = c.image ? `data:image/png;base64,${arrayBufferToBase64(c.image.data)}` : null;
+    if (image) {
+      imgElement = `<img src="${image}" class="card-img-top" alt="Complaint Image">`;
+    } else {
+      imgElement = `<div class="no-image text-center p-4 bg-light">Not Available</div>`;
+    }
+
+
+    const cardHTML = `
+            <div class="card m-2" style="width: 18rem;">
+                ${imgElement}
+                <div class="card-body">
+                    <h5 class="card-title">${c.title}</h5>
+                    <p class="card-text">${c.description}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Name: ${c.name}</li>
+                    <li class="list-group-item">Roll No: ${c.roll_no}</li>
+                    <li class="list-group-item">email: ${c.email}</li>
+                    <li class="list-group-item">hostel: ${c.hostel}</li>
+                    <li class="list-group-item">type: ${c.complaint_type}</li>
+                </ul>
+            </div>
+        `;
+    container.insertAdjacentHTML('beforeend', cardHTML);
+  });
+}
+loadComplaints();
