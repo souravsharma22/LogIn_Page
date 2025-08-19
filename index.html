@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
@@ -15,10 +15,10 @@
             <span>Arunachal Pradesh</span>
         </div>
         <div class="image-logo">
-            <img src="./logo/login_logo.png" alt="" style="height:150px; width:150px">
+            <img src="/logo/login_logo.png" alt="" style="height:150px; width:150px">
         </div>
         <div class="form-box active" id="login-form">
-            <form action="">
+            <form action="http://localhost:4000/login" method="post">
                 <h2>Login</h2>
                 <input type="email" name="Email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
@@ -28,7 +28,7 @@
             </form>
         </div>
          <div class="form-box" id="register-form">
-            <form action="">
+            <form action="http://localhost:4000/register" method="post">
                 <h2>Register</h2>
                 <input type="text" name="Name" placeholder="Name" required>
                 <input type="email" name="Email" placeholder="Email" required>
@@ -44,7 +44,7 @@
             </form>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="/script.js"></script>
 </body>
 
 </html>
