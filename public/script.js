@@ -52,6 +52,28 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+<script>
+  const form = document.querySelector("form");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const res = await fetch("http://localhost:4000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+    if (data.email) {
+      localStorage.setItem("userEmail", data.email);
+      // redirect or show welcome
+    } else {
+      alert("Login failed");
+    }
+  });
+</script>
 
 // ✅ Helper to render a complaint card
 function renderComplaint({ title, description, name, roll, hostel,type, image }) {
